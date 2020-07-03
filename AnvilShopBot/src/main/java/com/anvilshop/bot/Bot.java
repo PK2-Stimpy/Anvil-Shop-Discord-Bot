@@ -3,6 +3,7 @@ package com.anvilshop.bot;
 import javax.security.auth.login.LoginException;
 
 import com.anvilshop.bot.command.CommandInterpreter;
+import com.anvilshop.bot.httpstatus.HttpServerTest;
 import com.anvilshop.bot.scheduledtask.AScheduledTask;
 
 import net.dv8tion.jda.core.AccountType;
@@ -35,7 +36,9 @@ public class Bot extends ListenerAdapter{
 	}
 	
 	public static void main(String[] args) throws LoginException {
-		String token = "NzI0MTk4MDM0MTI4NTAyODM0.Xu91Wg.LOmCVhsuWrZO0NUifi_u6TjmpN8";
+		HttpServerTest.run();
+		
+		String token = "";
 		jda = new JDABuilder(AccountType.BOT)
 				.setToken(token)
 				.addEventListener(new Bot())

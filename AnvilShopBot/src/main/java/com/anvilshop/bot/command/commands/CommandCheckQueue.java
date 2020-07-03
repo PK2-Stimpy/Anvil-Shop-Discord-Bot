@@ -6,6 +6,7 @@ import com.anvilshop.bot.command.Category;
 import com.anvilshop.bot.command.Command;
 import com.anvilshop.bot.util.HTTPRequestUtil;
 import com.anvilshop.bot.util.JSONUtil;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -46,8 +47,23 @@ public class CommandCheckQueue extends Command{
 							.setFooter("Made by PK2_Stimpy", eventFinal.getGuild().getIconUrl())
 							.setColor(Color.BLACK)
 							.setDescription("Players online: " + players);
+					int queue = (players-100),
+						prioq = 0;
+					JsonElement info = JSONUtil.getJSONElement(obj, new String[] {"info"});
+					if(info != null) {
+						queue = Integer.parseInt(info.getAsJsonObject().get("clean").getAsJsonArray().get(2).getAsString().replaceAll("Regular: ", ""));
+						prioq = Integer.parseInt(info.getAsJsonObject().get("clean").getAsJsonArray().get(1).getAsString().replaceAll("Priority: ", ""));
+					}
+					if(queue <= 0) embed.addField("Queue", "There isn't any player on the queue", false);
+					else {
+						embed.addField("Queue", "There are **" + queue + "** players on the queue.", false);
+						if(prioq <= 0) embed.addField("Priority Queue", "There isn't any player on the priority queue", false);
+						else embed.addField("Priority Queue", "There are **" + prioq + "** players on the priority queue", false);
+					}
+					/*
 					if(players > 100) embed.addField("Queue", "There are **" + (players-100) + "** of queue. (Aproximate value)", false);
 					else embed.addField("Queue", "There isn't any queue (Aproximate value)", false);
+					*/
 					channel.sendMessage(embed.build()).queue();
 				} catch(Exception e) {
 					MessageEmbed embed = new EmbedBuilder()
